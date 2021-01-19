@@ -1,46 +1,26 @@
 <?php
 
+use App\Http\Controllers\CobaController;
 use App\Http\Controllers\GroupsController;
-use Illuminate\Controllers\CobaControllerS;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register web routes for your application. These
+| Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-/*
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
 });
-Route::get('/coba', function () {
-    return view('coba');
-});
-Route::get('/coba/{no}', [CobaController::class, 'coba']);
-Route::get('/test', [CobaController::class, 'index']);
-Route::get('/test/{ke}', [CobaController::class, 'urutan']);
-*/
-
-use App\Http\controllers\CobaController;
-//Route::get('', [CobaController::class, 'index']);
-//Route::get('/friends', [CobaController::class, 'index']);
-//Route::get('/friends/create', [CobaController::class, 'create']);
-//Route::post('/friends/store', [CobaController::class, 'store']);
-//Route::get('/friends/{id}', [CobaController::class, 'show']);
-//Route::get('/friends/{id}/edit', [CobaController::class, 'edit']);
-//Route::put('/friends/{id}', [CobaController::class, 'update']);
-//Route::delete('/friends/{id}', [CobaController::class, 'destroy']);
-
+Route::get('', [CobaController::class, 'index']);
 Route::resources([
     'friends' => CobaController::class,
     'groups' => GroupsController::class,
-]);
-Route::get('/groups/addmember/{group}', [GroupsController::class, 'addmember']);
-Route::put('/groups/addmember/{group}', [GroupsController::class, 'updateaddmember']);
-Route::put('/groups/deleteaddmember/{group}', [GroupsController::class,'deleteaddmember']);
+]); 
