@@ -13,14 +13,15 @@ class CobaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function index()
     {
-        $friend = Friends::where('id', $id) -> first();
 
+        $friends = Friends::orderBy('id', 'desc')->paginate(3);
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Teman',
-            'data' => $friend
+    
+            'message' => 'Daftar data teman',
+            'data' => $friends
         ], 200);
     }
 
@@ -30,7 +31,7 @@ class CobaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required|unique:friends|max:255',
@@ -38,18 +39,71 @@ class CobaController extends Controller
             'alamat' => 'required',
         ]);
 
+        $friends = Friends::create([
+            'nama'=> $request->nama,
+            'no_tlp' => $request->no_tlp,
+            'alamat' => $request->alamat
+            ]);
+
+            if($friends)
+            {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Teman berhasil di tambahkan',
+                    'data' => $friends
+                ], 200);
+            }else{
+                return response()->json([
+                'success' => false,
+                'message' => 'Teman gagal di tambahkan',
+                'data' => $friends
+            ], 409);
+            }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+                $friend = Friends::where('id', $id)->first();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Detail data teman',
+                    'data' => $friend
+                ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|unique:friends|max:255',
+            'no_tlp' => 'required|numeric',
+            'alamat' => 'required',
+        ]);
         $f = Friends::find($id)->update([
             'nama' => $request->nama,
             'no_tlp' => $request->no_tlp,
             'alamat' => $request->alamat
         ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Post updated',
-                'data' => $f
-            ], 200);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Post Updated',
+            'data' => $f
+        ], 200);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -59,7 +113,7 @@ class CobaController extends Controller
      */
     public function destroy($id)
     {
-        $cek =  Friends::find($id)->delete();
+        $cek = Friends::find($id)->delete();
 
         return response()->json([
             'success' => true,
@@ -67,4 +121,4 @@ class CobaController extends Controller
             'data' => $cek
         ], 200);
     }
-} 
+}

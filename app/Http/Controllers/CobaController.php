@@ -7,19 +7,20 @@ use Illuminate\Http\Request;
 
 class CobaController extends Controller
 {
-    public function index ()
+    public function index()
     {
         $friends = Friends::orderBy('id', 'desc')->paginate(3);
-        return view ('friends.index', compact('friends'));  
+        return view('friends.index', compact('friends'));
     }
-    public function create ()
+
+    public function create()
     {
-    return view('friends.create');
+        return view('friends.create');
     }
-    public function store (Request $request)
+
+    public function store(Request $request)
     {
-        // Validate the requst...
-            $request->validate([
+        $request->validate([
             'nama' => 'required|unique:friends|max:255',
             'no_tlp' => 'required|numeric',
             'alamat' => 'required',
@@ -32,17 +33,18 @@ class CobaController extends Controller
         $friends->alamat = $request->alamat;
 
         $friends->save();
+
         return redirect('/');
     }
     public function show($id)
     {
-        $friend = Friends::where('id',$id)->first();
-        return view('friends.show', ['friend'=>$friend]);
+        $friend = Friends::where('id', $id)->first();
+        return view('friends.show', ['friend' => $friend]);
     }
     public function edit($id)
     {
         $friend = Friends::where('id', $id)->first();
-        return view('friends.edit', ['friend'=>$friend]);
+        return view('friends.edit', ['friend' => $friend]);
     }
     public function update(Request $request, $id)
     {
